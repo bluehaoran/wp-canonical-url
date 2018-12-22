@@ -9,10 +9,11 @@
 // 1) if Admin, Add canonical URL metabox.
 //
 // 2) if non-admin, add canonical to wp_head().
-add_action('wp_head', function () {
-		$post_id = get_the_ID();
-		$canonical_url = get_post_meta($post_id, 'canonical_url', true);
-		if ($canonical_url) {
-				echo '<link rel="canonical" href="'.$canonical_url.'">";
+add_filter('get_canonical_url', function () {
+		if (! is_singular()) {
+			return;
 		}
+		$post_id = get_queried_object_id();
+		$canonical_url = get_post_meta($post_id, 'canonical_url', true);
+		return $canonical_url;
 });
